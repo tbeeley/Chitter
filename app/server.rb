@@ -24,6 +24,8 @@ end
 post '/peeps' do
 	message = params["message"]
 	timestamp = params["timestamp"]
-	Peep.create(message: message, timestamp: timestamp)
+	peep = Peep.new(message: message, timestamp: timestamp)
+	peep.timestamp = Time.now
+	peep.save
 	redirect to '/'
 end
