@@ -3,29 +3,43 @@ require 'data_mapper'
 require 'sinatra' 
 
 require_relative 'models/peep'
+require_relative 'models/user'
+
+require_relative './helpers/application.rb'
 
 env = ENV["RACK_ENV"] || "development"
 #we're telling datamapper to use postgres database on localhost.
 DataMapper.setup(:default, "postgres://localhost/Waffle_#{env}")
-
-require_relative './models/peep.rb'
-
 DataMapper.finalize
-#finalises the models. 
-
 DataMapper.auto_upgrade!
-#don't create the tables until they're ready. 
+
+enable :sessions
+set :session_secret, 'super secret'
+
 
 get '/' do
 	@peeps = Peep.all 
-	erb :index
+	erb :index, :layout => :layout
 end
 
 post '/peeps' do
 	message = params["message"]
-	timestamp = params["timestamp"]
-	peep = Peep.new(message: message, timestamp: timestamp)
-	peep.timestamp = Time.now
+	time = params["time"]
+	peep = Peep.new(message: message, time: time)
+	peep.time = Time.now
 	peep.save
 	redirect to '/'
+end
+
+get '/users/new' do
+	erb :"users/new"
+end
+
+post '/users' do
+  user = User.create(:email => params[:email], 
+  			  :name => params[:name], 
+  			  :username => params[:username], 
+              :password => params[:password])
+  session[:user_id] = user.id 
+  redirect to('/')
 end

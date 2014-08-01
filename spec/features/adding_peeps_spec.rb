@@ -12,7 +12,7 @@ feature "User adds a new link" do
 		expect(Peep.count).to eq(1)
 		peep = Peep.first
 		expect(peep.message).to eq("Loving this")
-		expect(peep.timestamp).to eq(time)
+		expect(peep.time).to eq(time)
 
 	end
 

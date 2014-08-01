@@ -4,7 +4,7 @@ feature 'User browses the list of peeps' do
 	
 	before(:each) {
 		Peep.create(message: "Just doing the challenge",
-					 timestamp: Time.new)
+					 time: Time.new)
 	}
 
 	scenario 'when opening the home page' do

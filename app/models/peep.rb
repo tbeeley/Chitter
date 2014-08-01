@@ -5,8 +5,8 @@ class Peep
 
 	property :id, 			Serial #auto-incremented
 	property :message, 		String
-	property :timestamp,	Time
- 
+	property :time,			Time
+
 
 end
 

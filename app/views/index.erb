@@ -1,10 +1,10 @@
 <ul>
-	 “Why can’t I just eat my waffle.”  -- Barack Obama
-	 <img src='/images/logo.png'>
-
+     “Why can’t I just eat my waffle.”  -- Barack Obama
+  <img src='/images/logo.png'>
+  <br>
+  <br>
   <% @peeps.each do |peep| %>
-    <li> <%= peep.message %></a></li>
-    <li> <%= peep.timestamp %></a></li>
+    <li> <%= peep.message %> (<%= peep.time %>)</li>
   <% end %>
 </ul>
 
