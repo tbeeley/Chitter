@@ -20,6 +20,8 @@ feature "User signs up" do
     expect(page).to have_content("This email is already taken")
   end
 
+
+
   def sign_up(email = "tbeeley@gmail.com", 
               name = "Thomas Beeley",
               username = "tbeeley",
@@ -37,6 +39,37 @@ feature "User signs up" do
     click_button "Sign up"
   end
 
+end
 
+feature "User signs in" do
+
+  before (:each) do
+    User.create(email: "rupert@cinnamonhill.com",
+          name: "Rupert Beeley",
+          username: "rbeeley",
+          password: "wilkinson",
+          password_confirmation: "wilkinson")
+  end
+
+  scenario "with correct credentials" do
+    visit '/'
+    expect(page).not_to have_content("Welcome, Rupert Beeley")
+    sign_in('rbeeley', 'wilkinson')
+    expect(page).to have_content("Welcome, Rupert Beeley")
+  end
+
+  scenario "with incorrect credentials" do
+    visit '/'
+    expect(page).not_to have_content("Welcome, Rupert Beeley")
+    sign_in('rbeeley', 'notwilkinson')
+    expect(page).not_to have_content("Welcome, Rupert Beeley")
+  end
+
+  def sign_in(username, password)
+    visit '/sessions/new'
+    fill_in 'username', :with => username
+    fill_in 'password', :with => password
+    click_button 'Sign in'
+  end
 
 end

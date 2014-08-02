@@ -7,18 +7,15 @@ require_relative 'models/peep'
 require_relative 'models/user'
 
 require_relative './helpers/application.rb'
-
-env = ENV["RACK_ENV"] || "development"
-#we're telling datamapper to use postgres database on localhost.
-DataMapper.setup(:default, "postgres://localhost/Waffle_#{env}")
-DataMapper.finalize
-DataMapper.auto_upgrade!
+require_relative 'data_mapper_setup'
 
 enable :sessions
 set :session_secret, 'super secret'
 set :views, Proc.new { File.join(root, "views") }
 set :public_dir, Proc.new { File.join(root, "..", "public") }
 use Rack::Flash
+set :public_dir, Proc.new { File.join(root, "..", "public") }
+
 
 
 get '/' do
@@ -52,6 +49,22 @@ post '/users' do
   else
   	  flash[:errors] = @user.errors.full_messages  	  
   	  erb :'users/new'
+  end
+end
+
+get '/sessions/new' do
+  erb :"sessions/new"
+end
+
+post '/sessions' do
+  username, password = params[:username], params[:password]
+  user = User.authenticate(username, password)
+  if user
+    session[:user_id] = user.id
+    redirect to('/')
+  else
+    flash[:errors] = ["The username or password is incorrect"]
+    erb :"sessions/new"
   end
 end
 
