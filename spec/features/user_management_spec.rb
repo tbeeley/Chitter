@@ -20,25 +20,6 @@ feature "User signs up" do
     expect(page).to have_content("This email is already taken")
   end
 
-
-
-  def sign_up(email = "tbeeley@gmail.com", 
-              name = "Thomas Beeley",
-              username = "tbeeley",
-              password = "hello",
-              password_confirmation = "hello"
-              )
-    visit '/users/new'
-    expect(page.status_code).to eq(200)
-    expect(page.status_code).to eq(200)
-    fill_in :email, :with => email
-    fill_in :name, :with => name
-    fill_in :username, :with => username
-    fill_in :password, :with => password
-    fill_in :password_confirmation, :with => password_confirmation
-    click_button "Sign up"
-  end
-
 end
 
 feature "User signs in" do
@@ -65,11 +46,23 @@ feature "User signs in" do
     expect(page).not_to have_content("Welcome, Rupert Beeley")
   end
 
-  def sign_in(username, password)
-    visit '/sessions/new'
-    fill_in 'username', :with => username
-    fill_in 'password', :with => password
-    click_button 'Sign in'
+end
+
+feature 'User signs out' do
+
+  before(:each) do
+    User.create(email: "rupert@cinnamonhill.com",
+          name: "Rupert Beeley",
+          username: "rbeeley",
+          password: "wilkinson",
+          password_confirmation: "wilkinson")
+  end
+
+  scenario 'while being signed in' do
+  sign_in('rbeeley', 'wilkinson')
+    click_button "Sign out"
+    expect(page).to have_content("Good bye!") 
+    expect(page).not_to have_content("Welcome, Rupert Beeley")
   end
 
 end

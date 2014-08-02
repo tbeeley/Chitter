@@ -8,6 +8,9 @@ require_relative 'models/user'
 
 require_relative './helpers/application.rb'
 require_relative 'data_mapper_setup'
+require_relative 'helpers/session'
+
+include SessionHelpers
 
 enable :sessions
 set :session_secret, 'super secret'
@@ -66,6 +69,12 @@ post '/sessions' do
     flash[:errors] = ["The username or password is incorrect"]
     erb :"sessions/new"
   end
+end
+
+delete '/sessions' do
+	flash[:notice] = "Good bye!"
+	session[:user_id] = nil
+	redirect to '/'
 end
 
 
