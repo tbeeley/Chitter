@@ -1,6 +1,7 @@
 
 require 'data_mapper'
 require 'sinatra' 
+require 'rack-flash'
 
 require_relative 'models/peep'
 require_relative 'models/user'
@@ -17,6 +18,7 @@ enable :sessions
 set :session_secret, 'super secret'
 set :views, Proc.new { File.join(root, "views") }
 set :public_dir, Proc.new { File.join(root, "..", "public") }
+use Rack::Flash
 
 
 get '/' do
@@ -34,15 +36,25 @@ post '/peeps' do
 end
 
 get '/users/new' do
+	@user = User.new
 	erb :"users/new"
 end
 
 post '/users' do
-  user = User.create(:email => params[:email], 
+  @user = User.new(:email => params[:email], 
   			  :name => params[:name], 
   			  :username => params[:username], 
               :password => params[:password],
   			  :password_confirmation => params[:password_confirmation])
-  session[:user_id] = user.id 
-  redirect to('/')
+  if @user.save
+	  session[:user_id] = @user.id 
+	  redirect to('/')
+  else
+  	  flash[:notice] = "Sorry, those passwords didn't match"
+  	  erb :'users/new'
+  end
 end
+
+
+
+
