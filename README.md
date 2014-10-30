@@ -1,0 +1,1 @@
+[![Code Climate](https://codeclimate.com/github/tbeeley/ma-Chitter/badges/gpa.svg)](https://codeclimate.com/github/tbeeley/ma-Chitter)
